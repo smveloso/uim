@@ -1,0 +1,282 @@
+<setup>
+   loglevel = 5
+   automonitors_update_interval = 5min
+   jboss7 = no
+   connectiontimeout = 60sec
+   jbossRemoteConnectionTimeout=60sec
+   retryCount=0
+</setup>
+<properties>
+   jar = *.jar
+   jar_common = jar/nimsoft.jar,jar/nimsoft-eb-jsr160.jar,jar/jboss.jar,jar/Twofish.jar
+   class = com.nimsoft.nimbus.probe.application.extractbase.Extract
+   miniprobe = com.nimsoft.nimbus.probe.application.extractbase.MiniProbe
+   ci = 3.5
+    <java_options>
+      min = -Xms64m
+      max = -Xmx225m
+   </java_options>
+</properties>
+<janitor>
+   active = yes
+   interval = 1min
+   silence = 1min
+   memorylimit = 200000
+   <qos>
+      active = no
+   </qos>
+</janitor>
+<qos>
+   <QOS_JBOSS_MEMORY_USAGE_BYTES> overwrite
+      name = QOS_JBOSS_MEMORY_USAGE_BYTES
+      group = QOS_JBOSS_DEFAULT
+      desc = Memory in B
+      unit = Byte
+      abbr = B
+      hasmax = no
+      isbool = no
+      asynch = no
+      mi = 4
+   </QOS_JBOSS_MEMORY_USAGE_BYTES>
+   <QOS_JBOSS_MEMORY_USAGE> overwrite
+      name = QOS_JBOSS_MEMORY_USAGE
+      group = QOS_JBOSS_DEFAULT
+      desc = Memory in KB
+      unit = KiloByte
+      abbr = KB
+      hasmax = no
+      isbool = no
+      asynch = no
+      mi = 3
+   </QOS_JBOSS_MEMORY_USAGE>
+   <QOS_JBOSS_THREADCOUNT> overwrite
+      name = QOS_JBOSS_THREADCOUNT
+      group = QOS_JBOSS_DEFAULT
+      desc = Counter
+      unit = cnt
+      abbr = n
+      hasmax = no
+      isbool = no
+      asynch = no
+      mi = 5
+   </QOS_JBOSS_THREADCOUNT>
+   <QOS_JBOSS_CONNECTIONCOUNT> overwrite
+      name = QOS_JBOSS_CONNECTIONCOUNT
+      group = QOS_JBOSS_DEFAULT
+      desc = Counter
+      unit = cnt
+      abbr = n
+      hasmax = no
+      isbool = no
+      asynch = no
+      mi = 6
+   </QOS_JBOSS_CONNECTIONCOUNT>
+   <QOS_JBOSS_COUNTER> overwrite
+      name = QOS_JBOSS_COUNTER
+      group = QOS_JBOSS_DEFAULT
+      desc = Counter
+      unit = cnt
+      abbr = n
+      hasmax = no
+      isbool = no
+      asynch = no
+      mi = 7
+   </QOS_JBOSS_COUNTER>
+   <QOS_JBOSS_METHOD_DELTA_COUNTER> overwrite
+      name = QOS_JBOSS_METHOD_DELTA_COUNTER
+      group = QOS_JBOSS_DEFAULT
+      desc = Method counters (delta)
+      unit = Counter
+      abbr = cnt
+      hasmax = no
+      isbool = no
+      asynch = no
+      mi = 10
+   </QOS_JBOSS_METHOD_DELTA_COUNTER>
+   <QOS_JBOSS_NETWORK_BYTES_RECEIVED> overwrite
+      name = QOS_JBOSS_NETWORK_BYTES_RECEIVED
+      group = QOS_JBOSS_DEFAULT
+      desc = Bytes Received per Second
+      unit = Bytes / Second
+      abbr = B / s
+      hasmax = no
+      isbool = no
+      asynch = no
+      mi = 9
+   </QOS_JBOSS_NETWORK_BYTES_RECEIVED>
+   <QOS_JBOSS_NETWORK_BYTES_SENT> overwrite
+      name = QOS_JBOSS_NETWORK_BYTES_SENT
+      group = QOS_JBOSS_DEFAULT
+      desc = Bytes Sent per Second
+      unit = Bytes / Second
+      abbr = B / s
+      hasmax = no
+      isbool = no
+      asynch = no
+      mi = 8
+   </QOS_JBOSS_NETWORK_BYTES_SENT>
+</qos>
+<messages>
+   <ResourceCritical> overwrite
+	name = ResourceCritical
+	token = resource_error
+    i18n_token = as#application.jboss.resource_critical_error
+    i18n_token_Ok = as#application.jboss.resource_critical_Ok	
+	msn_err = The resource $resource is not responding.
+	msn_ok = The resource $resource is responding.
+	sev = 5
+	subsystem = 2.11.1.1
+   </ResourceCritical>
+   <ResourceWarning> overwrite
+	name = ResourceWarning
+	token = resource_error
+    i18n_token = as#application.jboss.resource_error
+    i18n_token_Ok = as#application.jboss.resource_Ok	
+	msn_err = The resource $resource is not responding
+	msn_ok = The resource $resource is responding
+	sev = 3
+	subsystem = 2.11.1.1
+   </ResourceWarning>
+   <ProfileCritical> overwrite
+      	name = ProfileCritical
+      	token = profile_error
+		i18n_token = as#application.jboss.profile_error
+		i18n_token_Ok = as#application.jboss.profile_Ok		
+      	msn_err = The $host is not responding (reason: $descr)
+      	msn_ok = The $host is now responding
+      	sev = 5
+      	subsystem = 2.11.1.2
+   </ProfileCritical>
+   <MonitorWarning> overwrite
+	name = MonitorWarning
+	token = monitor_error
+	i18n_token = as#application.jboss.monitor_error
+	i18n_token_Ok = as#application.jboss.monitor_Ok	
+	msn_err = The $monitor on $resource.$profile exceeds threshold value ($value $oper $thr)
+	msn_ok = The $monitor on $resource.$profile is OK ($value)
+	sev = 4
+	subsystem = 2.11.1.3
+   </MonitorWarning>
+   <MemoryWarning> overwrite
+   	name = MemoryWarning
+   	token = monitor_error
+	i18n_token = as#application.jboss.memory_error
+	i18n_token_Ok = as#application.jboss.memory_Ok	
+   	msn_err = The memory usage for $monitor on $resource.$profile exceeds threshold value ($value $oper $thr)
+   	msn_ok = The memory usage for monitor $monitor on $resource.$profile is OK
+   	sev = 3
+   	subsystem = 2.11.1.4
+   </MemoryWarning>
+   <ThreadCountWarning> overwrite
+      	name = ThreadCountWarning
+      	token = monitor_error
+		i18n_token = as#application.jboss.thread_count_error
+		i18n_token_Ok = as#application.jboss.thread_count_Ok		
+      	msn_err = The threadcount value for $monitor on $resource.$profile exceeds threshold value ($value $oper $thr)
+      	msn_ok = The threadcount for $monitor on $resource.$profile is OK ($value)
+      	sev = 3
+      	subsystem = 2.11.1.5
+   </ThreadCountWarning>
+   <ConnectionWarning> overwrite
+      	name = ConnectionWarning
+      	token = monitor_error
+		i18n_token = as#application.jboss.connection_error
+		i18n_token_Ok = as#application.jboss.connection_Ok		
+      	msn_err = The connection count value for $monitor on $resource.$profile exceeds threshold value ($value $oper $thr)
+      	msn_ok = The connection count for $monitor on $resource.$profile is OK ($value)
+      	sev = 3
+      	subsystem = 2.11.1.6
+   </ConnectionWarning>
+   <NetworkWarning> overwrite
+        name = NetworkWarning
+        token = monitor_error
+		i18n_token = as#application.jboss.network_error
+		i18n_token_Ok = as#application.jboss.network_Ok		
+        msn_err = The network usage for $monitor on $resource.$profile exceeds threshold value ($value $oper $thr)
+        msn_ok = The network usage for $monitor on $resource.$profile is OK ($value)
+        sev = 3
+        subsystem = 2.11.1.7
+   </NetworkWarning>
+   <CounterWarning> overwrite
+      	name = CounterWarning
+      	token = monitor_error
+		i18n_token = as#application.jboss.counter_error
+		i18n_token_Ok = as#application.jboss.counter_Ok		
+      	msn_err = The counter value for $monitor on $resource.$profile exceeds threshold value ($value $oper $thr)
+      	msn_ok = The counter for $monitor on $resource.$profile is OK ($value)
+      	sev = 3
+      	subsystem = 2.11.1.8
+   </CounterWarning>
+</messages>
+<template>
+	<Default Template>
+      name = Default Template
+      description = Default Template
+      <jboss.threads:name=ThreadPool,type=boundedQueueThreadPool~jboss.threads.boundedQueueThreadPool.ThreadPool@MaxThreads>
+         active = yes
+         key = jboss.threads:name=ThreadPool,type=boundedQueueThreadPool~jboss.threads.boundedQueueThreadPool.ThreadPool@MaxThreads
+         name = jboss.threads/boundedQueueThreadPool/*/jboss.threads:name=ThreadPool,type=boundedQueueThreadPool/ThreadPool@MaxThreads
+         tempMonName = 
+         oldkey = "jboss.threads"."boundedQueueThreadPool"."ThreadPool"."MaxThreads"
+         oper = !=
+         thr = 16
+         unit = int
+         desc = Attribute exposed for management
+         group = General
+         alarm_on = yes
+         msg = MonitorWarning
+         qos_on = yes
+         qos = 
+         notfoundalarm = no
+         alarm_always = no
+         Parent_Level = 2
+         Parent_Root_Node = "jboss.threads"."boundedQueueThreadPool"
+      </jboss.threads:name=ThreadPool,type=boundedQueueThreadPool~jboss.threads.boundedQueueThreadPool.ThreadPool@MaxThreads>
+      <java.lang:type=Memory~java.lang.Memory.name.HeapMemoryUsage@used>
+         active = yes
+         key = java.lang:type=Memory~java.lang.Memory.name.HeapMemoryUsage@used
+         name = java.lang/Memory/*/HeapMemoryUsage/used"
+         tempMonName = 
+         oldkey = "java.lang"."Memory"."name"."HeapMemoryUsage"."used"
+         oper = !=
+         thr = 128815792
+         unit = java.lang.Long
+         desc = used
+         group = General
+         alarm_on = yes
+         msg = MonitorWarning
+         qos_on = yes
+         qos = 
+         notfoundalarm = no
+         alarm_always = no
+         Parent_Level = 3
+         Parent_Root_Node = "java.lang"."Memory"
+      </java.lang:type=Memory~java.lang.Memory.name.HeapMemoryUsage@used>
+      <java.lang:name=PS MarkSweep,type=GarbageCollector~java.lang.GarbageCollector.PS MarkSweep@CollectionTime>
+         active = yes
+         key = java.lang:name=PS MarkSweep,type=GarbageCollector~java.lang.GarbageCollector.PS MarkSweep@CollectionTime
+         name = java.lang/GarbageCollector/*/java.lang:name=PS MarkSweep,type=GarbageCollector/PS MarkSweep@CollectionTime
+         tempMonName = 
+         oldkey = "java.lang"."GarbageCollector"."PS MarkSweep"."CollectionTime"
+         oper = !=
+         thr = 502
+         unit = long
+         desc = CollectionTime
+         group = General
+         alarm_on = yes
+         msg = MonitorWarning
+         qos_on = yes
+         qos = 
+         notfoundalarm = no
+         alarm_always = no
+         Parent_Level = 2
+         Parent_Root_Node = "java.lang"."GarbageCollector"
+      </java.lang:name=PS MarkSweep,type=GarbageCollector~java.lang.GarbageCollector.PS MarkSweep@CollectionTime>
+   </Default Template>
+</template>
+<startup>
+    <opt>
+        java_mem_max = -Xmx128m
+        java_mem_init = -Xms32m
+    </opt>
+</startup>
