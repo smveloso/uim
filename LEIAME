@@ -1,0 +1,3 @@
+profile name must be the same as the host name (uim)
+ /opt/nimsoft/bin/pu  /TRT3/vm-win-uim-05/jbtest3/jboss _restart
+
