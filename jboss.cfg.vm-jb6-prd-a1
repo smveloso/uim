@@ -1,0 +1,952 @@
+<setup>
+   loglevel = 5
+   automonitors_update_interval = 5min
+   jboss7 = yes
+   connectiontimeout = 60sec
+   jbossRemoteConnectionTimeout = 60sec
+   retryCount = 0
+   jboss_version = 7
+</setup>
+<properties>
+   jar = *.jar
+   jar_common = jar/nimsoft.jar,jar/nimsoft-eb-jsr160.jar,jar/jboss.jar,jar/Twofish.jar
+   class = com.nimsoft.nimbus.probe.application.extractbase.Extract
+   miniprobe = com.nimsoft.nimbus.probe.application.extractbase.MiniProbe
+   ci = 3.5
+   jar_env = /srv/jboss/jboss-eap-6.3.0/jboss-eap-6.3/bin/client
+   java_home = /usr/java/default/bin
+   <java_options>
+      min = -Xms64m
+      max = -Xmx225m
+   </java_options>
+</properties>
+<janitor>
+   active = yes
+   interval = 1min
+   silence = 1min
+   memorylimit = 200000
+   <qos>
+      active = no
+   </qos>
+</janitor>
+<qos>
+   <QOS_JBOSS_MEMORY_USAGE_BYTES>
+      name = QOS_JBOSS_MEMORY_USAGE_BYTES
+      group = QOS_JBOSS_DEFAULT
+      desc = Memory in B
+      unit = Byte
+      abbr = B
+      hasmax = no
+      isbool = no
+      asynch = no
+      mi = 4
+   </QOS_JBOSS_MEMORY_USAGE_BYTES>
+   <QOS_JBOSS_MEMORY_USAGE>
+      name = QOS_JBOSS_MEMORY_USAGE
+      group = QOS_JBOSS_DEFAULT
+      desc = Memory in KB
+      unit = KiloByte
+      abbr = KB
+      hasmax = no
+      isbool = no
+      asynch = no
+      mi = 3
+   </QOS_JBOSS_MEMORY_USAGE>
+   <QOS_JBOSS_THREADCOUNT>
+      name = QOS_JBOSS_THREADCOUNT
+      group = QOS_JBOSS_DEFAULT
+      desc = Counter
+      unit = cnt
+      abbr = n
+      hasmax = no
+      isbool = no
+      asynch = no
+      mi = 5
+   </QOS_JBOSS_THREADCOUNT>
+   <QOS_JBOSS_CONNECTIONCOUNT>
+      name = QOS_JBOSS_CONNECTIONCOUNT
+      group = QOS_JBOSS_DEFAULT
+      desc = Counter
+      unit = cnt
+      abbr = n
+      hasmax = no
+      isbool = no
+      asynch = no
+      mi = 6
+   </QOS_JBOSS_CONNECTIONCOUNT>
+   <QOS_JBOSS_COUNTER>
+      name = QOS_JBOSS_COUNTER
+      group = QOS_JBOSS_DEFAULT
+      desc = Counter
+      unit = cnt
+      abbr = n
+      hasmax = no
+      isbool = no
+      asynch = no
+      mi = 7
+   </QOS_JBOSS_COUNTER>
+   <QOS_JBOSS_METHOD_DELTA_COUNTER>
+      name = QOS_JBOSS_METHOD_DELTA_COUNTER
+      group = QOS_JBOSS_DEFAULT
+      desc = Method counters (delta)
+      unit = Counter
+      abbr = cnt
+      hasmax = no
+      isbool = no
+      asynch = no
+      mi = 10
+   </QOS_JBOSS_METHOD_DELTA_COUNTER>
+   <QOS_JBOSS_NETWORK_BYTES_RECEIVED>
+      name = QOS_JBOSS_NETWORK_BYTES_RECEIVED
+      group = QOS_JBOSS_DEFAULT
+      desc = Bytes Received per Second
+      unit = Bytes / Second
+      abbr = B / s
+      hasmax = no
+      isbool = no
+      asynch = no
+      mi = 9
+   </QOS_JBOSS_NETWORK_BYTES_RECEIVED>
+   <QOS_JBOSS_NETWORK_BYTES_SENT>
+      name = QOS_JBOSS_NETWORK_BYTES_SENT
+      group = QOS_JBOSS_DEFAULT
+      desc = Bytes Sent per Second
+      unit = Bytes / Second
+      abbr = B / s
+      hasmax = no
+      isbool = no
+      asynch = no
+      mi = 8
+   </QOS_JBOSS_NETWORK_BYTES_SENT>
+</qos>
+<messages>
+   <ResourceCritical>
+      name = ResourceCritical
+      token = resource_error
+      i18n_token = as#application.jboss.resource_critical_error
+      i18n_token_Ok = as#application.jboss.resource_critical_Ok
+      msn_err = The resource $resource is not responding.
+      msn_ok = The resource $resource is responding.
+      sev = 5
+      subsystem = 2.11.1.1
+   </ResourceCritical>
+   <ResourceWarning>
+      name = ResourceWarning
+      token = resource_error
+      i18n_token = as#application.jboss.resource_error
+      i18n_token_Ok = as#application.jboss.resource_Ok
+      msn_err = The resource $resource is not responding
+      msn_ok = The resource $resource is responding
+      sev = 3
+      subsystem = 2.11.1.1
+   </ResourceWarning>
+   <ProfileCritical>
+      name = ProfileCritical
+      token = profile_error
+      i18n_token = as#application.jboss.profile_error
+      i18n_token_Ok = as#application.jboss.profile_Ok
+      msn_err = The $host is not responding (reason: $descr)
+      msn_ok = The $host is now responding
+      sev = 5
+      subsystem = 2.11.1.2
+   </ProfileCritical>
+   <MonitorWarning>
+      name = MonitorWarning
+      token = monitor_error
+      i18n_token = as#application.jboss.monitor_error
+      i18n_token_Ok = as#application.jboss.monitor_Ok
+      msn_err = The $monitor on $resource.$profile exceeds threshold value ($value $oper $thr)
+      msn_ok = The $monitor on $resource.$profile is OK ($value)
+      sev = 4
+      subsystem = 2.11.1.3
+   </MonitorWarning>
+   <MemoryWarning>
+      name = MemoryWarning
+      token = monitor_error
+      i18n_token = as#application.jboss.memory_error
+      i18n_token_Ok = as#application.jboss.memory_Ok
+      msn_err = The memory usage for $monitor on $resource.$profile exceeds threshold value ($value $oper $thr)
+      msn_ok = The memory usage for monitor $monitor on $resource.$profile is OK
+      sev = 3
+      subsystem = 2.11.1.4
+   </MemoryWarning>
+   <ThreadCountWarning>
+      name = ThreadCountWarning
+      token = monitor_error
+      i18n_token = as#application.jboss.thread_count_error
+      i18n_token_Ok = as#application.jboss.thread_count_Ok
+      msn_err = The threadcount value for $monitor on $resource.$profile exceeds threshold value ($value $oper $thr)
+      msn_ok = The threadcount for $monitor on $resource.$profile is OK ($value)
+      sev = 3
+      subsystem = 2.11.1.5
+   </ThreadCountWarning>
+   <ConnectionWarning>
+      name = ConnectionWarning
+      token = monitor_error
+      i18n_token = as#application.jboss.connection_error
+      i18n_token_Ok = as#application.jboss.connection_Ok
+      msn_err = The connection count value for $monitor on $resource.$profile exceeds threshold value ($value $oper $thr)
+      msn_ok = The connection count for $monitor on $resource.$profile is OK ($value)
+      sev = 3
+      subsystem = 2.11.1.6
+   </ConnectionWarning>
+   <NetworkWarning>
+      name = NetworkWarning
+      token = monitor_error
+      i18n_token = as#application.jboss.network_error
+      i18n_token_Ok = as#application.jboss.network_Ok
+      msn_err = The network usage for $monitor on $resource.$profile exceeds threshold value ($value $oper $thr)
+      msn_ok = The network usage for $monitor on $resource.$profile is OK ($value)
+      sev = 3
+      subsystem = 2.11.1.7
+   </NetworkWarning>
+   <CounterWarning>
+      name = CounterWarning
+      token = monitor_error
+      i18n_token = as#application.jboss.counter_error
+      i18n_token_Ok = as#application.jboss.counter_Ok
+      msn_err = The counter value for $monitor on $resource.$profile exceeds threshold value ($value $oper $thr)
+      msn_ok = The counter for $monitor on $resource.$profile is OK ($value)
+      sev = 3
+      subsystem = 2.11.1.8
+   </CounterWarning>
+</messages>
+<template>
+   <Default Template>
+      name = Default Template
+      description = Default Template
+      <jboss.threads:name=ThreadPool,type=boundedQueueThreadPool~jboss.threads.boundedQueueThreadPool.ThreadPool@MaxThreads>
+         active = yes
+         key = jboss.threads:name=ThreadPool,type=boundedQueueThreadPool~jboss.threads.boundedQueueThreadPool.ThreadPool@MaxThreads
+         name = jboss.threads/boundedQueueThreadPool/*/jboss.threads:name=ThreadPool,type=boundedQueueThreadPool/ThreadPool@MaxThreads
+         tempMonName = 
+         oldkey = "jboss.threads"."boundedQueueThreadPool"."ThreadPool"."MaxThreads"
+         oper = !=
+         thr = 16
+         unit = int
+         desc = Attribute exposed for management
+         group = General
+         alarm_on = yes
+         msg = MonitorWarning
+         qos_on = yes
+         qos = 
+         notfoundalarm = no
+         alarm_always = no
+         Parent_Level = 2
+         Parent_Root_Node = "jboss.threads"."boundedQueueThreadPool"
+      </jboss.threads:name=ThreadPool,type=boundedQueueThreadPool~jboss.threads.boundedQueueThreadPool.ThreadPool@MaxThreads>
+      <java.lang:type=Memory~java.lang.Memory.name.HeapMemoryUsage@used>
+         active = yes
+         key = java.lang:type=Memory~java.lang.Memory.name.HeapMemoryUsage@used
+         name = java.lang/Memory/*/HeapMemoryUsage/used"
+         tempMonName = 
+         oldkey = "java.lang"."Memory"."name"."HeapMemoryUsage"."used"
+         oper = !=
+         thr = 128815792
+         unit = java.lang.Long
+         desc = used
+         group = General
+         alarm_on = yes
+         msg = MonitorWarning
+         qos_on = yes
+         qos = 
+         notfoundalarm = no
+         alarm_always = no
+         Parent_Level = 3
+         Parent_Root_Node = "java.lang"."Memory"
+      </java.lang:type=Memory~java.lang.Memory.name.HeapMemoryUsage@used>
+      <java.lang:name=PS MarkSweep,type=GarbageCollector~java.lang.GarbageCollector.PS MarkSweep@CollectionTime>
+         active = yes
+         key = java.lang:name=PS MarkSweep,type=GarbageCollector~java.lang.GarbageCollector.PS MarkSweep@CollectionTime
+         name = java.lang/GarbageCollector/*/java.lang:name=PS MarkSweep,type=GarbageCollector/PS MarkSweep@CollectionTime
+         tempMonName = 
+         oldkey = "java.lang"."GarbageCollector"."PS MarkSweep"."CollectionTime"
+         oper = !=
+         thr = 502
+         unit = long
+         desc = CollectionTime
+         group = General
+         alarm_on = yes
+         msg = MonitorWarning
+         qos_on = yes
+         qos = 
+         notfoundalarm = no
+         alarm_always = no
+         Parent_Level = 2
+         Parent_Root_Node = "java.lang"."GarbageCollector"
+      </java.lang:name=PS MarkSweep,type=GarbageCollector~java.lang.GarbageCollector.PS MarkSweep@CollectionTime>
+   </Default Template>
+   <JBOSS6>
+      name = JBOSS6
+      description = 
+      <java.lang:name=PS MarkSweep,type=GarbageCollector~java.lang.GarbageCollector.PS MarkSweep@CollectionCount>
+         active = yes
+         key = java.lang:name=PS MarkSweep,type=GarbageCollector~java.lang.GarbageCollector.PS MarkSweep@CollectionCount
+         name = java.lang/GarbageCollector/*/CollectionCount
+         tempMonName = 
+         oldkey = "java.lang"."GarbageCollector"."PS MarkSweep"."CollectionCount"
+         oper = !=
+         thr = 2297
+         unit = long
+         desc = CollectionCount
+         group = General
+         alarm_on = no
+         msg = MonitorWarning
+         qos_on = yes
+         qos = QOS_JBOSS_MEMORY_USAGE
+         notfoundalarm = no
+         alarm_always = no
+         profile_name = 10.3.192.108
+         Parent_Level = 2
+         Parent_Root_Node = "java.lang"."GarbageCollector"
+      </java.lang:name=PS MarkSweep,type=GarbageCollector~java.lang.GarbageCollector.PS MarkSweep@CollectionCount>
+      <java.lang:name=PS Old Gen,type=MemoryPool~java.lang.MemoryPool.PS Old Gen.Usage@committed>
+         active = yes
+         key = java.lang:name=PS Old Gen,type=MemoryPool~java.lang.MemoryPool.PS Old Gen.Usage@committed
+         name = java.lang/MemoryPool/*/Usage/committed"
+         tempMonName = 
+         oldkey = "java.lang"."MemoryPool"."PS Old Gen"."Usage"."committed"
+         oper = !=
+         unit = java.lang.Long
+         group = General
+         alarm_on = no
+         msg = MonitorWarning
+         qos_on = yes
+         qos = QOS_JBOSS_MEMORY_USAGE
+         notfoundalarm = no
+         alarm_always = no
+         profile_name = 10.3.192.108
+         Parent_Level = 3
+         Parent_Root_Node = "java.lang"."MemoryPool"
+      </java.lang:name=PS Old Gen,type=MemoryPool~java.lang.MemoryPool.PS Old Gen.Usage@committed>
+      <java.lang:name=PS Old Gen,type=MemoryPool~java.lang.MemoryPool.PS Old Gen.Usage@max>
+         active = yes
+         key = java.lang:name=PS Old Gen,type=MemoryPool~java.lang.MemoryPool.PS Old Gen.Usage@max
+         name = java.lang/MemoryPool/*/Usage/max"
+         tempMonName = 
+         oldkey = "java.lang"."MemoryPool"."PS Old Gen"."Usage"."max"
+         oper = !=
+         unit = java.lang.Long
+         group = General
+         alarm_on = no
+         msg = MonitorWarning
+         qos_on = yes
+         qos = QOS_JBOSS_MEMORY_USAGE
+         notfoundalarm = no
+         alarm_always = no
+         profile_name = 10.3.192.108
+         Parent_Level = 3
+         Parent_Root_Node = "java.lang"."MemoryPool"
+      </java.lang:name=PS Old Gen,type=MemoryPool~java.lang.MemoryPool.PS Old Gen.Usage@max>
+      <java.lang:name=PS Old Gen,type=MemoryPool~java.lang.MemoryPool.PS Old Gen.Usage@used>
+         active = yes
+         key = java.lang:name=PS Old Gen,type=MemoryPool~java.lang.MemoryPool.PS Old Gen.Usage@used
+         name = java.lang/MemoryPool/*/Usage/used"
+         tempMonName = 
+         oldkey = "java.lang"."MemoryPool"."PS Old Gen"."Usage"."used"
+         oper = !=
+         thr = 855089920
+         unit = java.lang.Long
+         group = General
+         alarm_on = no
+         msg = MonitorWarning
+         qos_on = yes
+         qos = QOS_JBOSS_MEMORY_USAGE
+         notfoundalarm = no
+         alarm_always = no
+         profile_name = 10.3.192.108
+         Parent_Level = 3
+         Parent_Root_Node = "java.lang"."MemoryPool"
+      </java.lang:name=PS Old Gen,type=MemoryPool~java.lang.MemoryPool.PS Old Gen.Usage@used>
+      <java.lang:type=Threading~java.lang.Threading.name@DaemonThreadCount>
+         active = yes
+         key = java.lang:type=Threading~java.lang.Threading.name@DaemonThreadCount
+         name = java.lang/Threading/*/DaemonThreadCount
+         tempMonName = 
+         oldkey = "java.lang"."Threading"."name"."DaemonThreadCount"
+         oper = >
+         thr = 1000
+         unit = int
+         desc = DaemonThreadCount
+         group = General
+         alarm_on = yes
+         msg = MonitorWarning
+         qos_on = yes
+         qos = QOS_JBOSS_THREADCOUNT
+         notfoundalarm = no
+         alarm_always = no
+         profile_name = 10.3.192.108
+         Parent_Level = 2
+         Parent_Root_Node = "java.lang"."Threading"
+      </java.lang:type=Threading~java.lang.Threading.name@DaemonThreadCount>
+      <java.lang:type=Threading~java.lang.Threading.name@PeakThreadCount>
+         active = yes
+         key = java.lang:type=Threading~java.lang.Threading.name@PeakThreadCount
+         name = java.lang/Threading/*/PeakThreadCount
+         tempMonName = 
+         oldkey = "java.lang"."Threading"."name"."PeakThreadCount"
+         oper = !=
+         thr = 207
+         unit = int
+         desc = PeakThreadCount
+         group = General
+         alarm_on = no
+         msg = MonitorWarning
+         qos_on = yes
+         qos = QOS_JBOSS_THREADCOUNT
+         notfoundalarm = no
+         alarm_always = no
+         profile_name = 10.3.192.108
+         Parent_Level = 2
+         Parent_Root_Node = "java.lang"."Threading"
+      </java.lang:type=Threading~java.lang.Threading.name@PeakThreadCount>
+      <java.lang:type=Threading~java.lang.Threading.name@ThreadCount>
+         active = yes
+         key = java.lang:type=Threading~java.lang.Threading.name@ThreadCount
+         name = java.lang/Threading/*/ThreadCount
+         tempMonName = 
+         oldkey = "java.lang"."Threading"."name"."ThreadCount"
+         oper = !=
+         thr = 192
+         unit = int
+         desc = ThreadCount
+         group = General
+         alarm_on = no
+         msg = MonitorWarning
+         qos_on = yes
+         qos = QOS_JBOSS_THREADCOUNT
+         notfoundalarm = no
+         alarm_always = no
+         profile_name = 10.3.192.108
+         Parent_Level = 2
+         Parent_Root_Node = "java.lang"."Threading"
+      </java.lang:type=Threading~java.lang.Threading.name@ThreadCount>
+   </JBOSS6>
+</template>
+<startup>
+   <opt>
+      java_mem_max = -Xmx128m
+      java_mem_init = -Xms32m
+   </opt>
+</startup>
+<resources>
+   <prod1>
+      active = yes
+      name = prod1
+      alarm_on_resource = 1
+      msg = ResourceCritical
+      handlerclass = com.nimsoft.nimbus.probe.application.jboss.JmxHandler
+      helperclass = com.nimsoft.nimbus.probe.application.jboss.AttributeHandler
+      interval = 5min
+      <properties>
+         nconn = 1
+         user = jboss
+         pass = MPYv0uRvBGZ8cxPz55tryA==
+         simulate_cluster = 
+         host = vm-jb6-prd-a1.trt
+         port = 4547
+         all = vm-jb6-prd-a1.trt:4547
+      </properties>
+      <auto_monitors>
+         <java.lang:name=PS MarkSweep,type=GarbageCollector~PS MarkSweep@CollectionCount>
+            active = yes
+            key = java.lang:name=PS MarkSweep,type=GarbageCollector~java.lang.GarbageCollector.PS MarkSweep@CollectionCount
+            name = java.lang:name=PS MarkSweep,type=GarbageCollector~PS MarkSweep@CollectionCount
+            tempMonName = 
+            oldkey = "java.lang"."GarbageCollector"."PS MarkSweep"."CollectionCount"
+            oper = !=
+            thr = 2297
+            unit = long
+            desc = CollectionCount
+            group = General
+            alarm_on = no
+            msg = MonitorWarning
+            qos_on = yes
+            qos = QOS_JBOSS_MEMORY_USAGE
+            notfoundalarm = no
+            alarm_always = no
+            profile_name = 10.3.192.108
+            Parent_Level = 2
+            Parent_Root_Node = "java.lang"."GarbageCollector"
+         </java.lang:name=PS MarkSweep,type=GarbageCollector~PS MarkSweep@CollectionCount>
+         <java.lang:name=PS Old Gen,type=MemoryPool~Usage@committed>
+            active = yes
+            key = java.lang:name=PS Old Gen,type=MemoryPool~java.lang.MemoryPool.PS Old Gen.Usage@committed
+            name = java.lang:name=PS Old Gen,type=MemoryPool~Usage@committed
+            tempMonName = 
+            oldkey = "java.lang"."MemoryPool"."PS Old Gen"."Usage"."committed"
+            oper = !=
+            unit = java.lang.Long
+            group = General
+            alarm_on = no
+            msg = MonitorWarning
+            qos_on = yes
+            qos = QOS_JBOSS_MEMORY_USAGE
+            notfoundalarm = no
+            alarm_always = no
+            profile_name = 10.3.192.108
+            Parent_Level = 3
+            Parent_Root_Node = "java.lang"."MemoryPool"
+         </java.lang:name=PS Old Gen,type=MemoryPool~Usage@committed>
+         <java.lang:name=PS Old Gen,type=MemoryPool~Usage@max>
+            active = yes
+            key = java.lang:name=PS Old Gen,type=MemoryPool~java.lang.MemoryPool.PS Old Gen.Usage@max
+            name = java.lang:name=PS Old Gen,type=MemoryPool~Usage@max
+            tempMonName = 
+            oldkey = "java.lang"."MemoryPool"."PS Old Gen"."Usage"."max"
+            oper = !=
+            unit = java.lang.Long
+            group = General
+            alarm_on = no
+            msg = MonitorWarning
+            qos_on = yes
+            qos = QOS_JBOSS_MEMORY_USAGE
+            notfoundalarm = no
+            alarm_always = no
+            profile_name = 10.3.192.108
+            Parent_Level = 3
+            Parent_Root_Node = "java.lang"."MemoryPool"
+         </java.lang:name=PS Old Gen,type=MemoryPool~Usage@max>
+         <java.lang:name=PS Old Gen,type=MemoryPool~Usage@used>
+            active = yes
+            key = java.lang:name=PS Old Gen,type=MemoryPool~java.lang.MemoryPool.PS Old Gen.Usage@used
+            name = java.lang:name=PS Old Gen,type=MemoryPool~Usage@used
+            tempMonName = 
+            oldkey = "java.lang"."MemoryPool"."PS Old Gen"."Usage"."used"
+            oper = !=
+            thr = 855089920
+            unit = java.lang.Long
+            group = General
+            alarm_on = no
+            msg = MonitorWarning
+            qos_on = yes
+            qos = QOS_JBOSS_MEMORY_USAGE
+            notfoundalarm = no
+            alarm_always = no
+            profile_name = 10.3.192.108
+            Parent_Level = 3
+            Parent_Root_Node = "java.lang"."MemoryPool"
+         </java.lang:name=PS Old Gen,type=MemoryPool~Usage@used>
+         <java.lang:type=Threading~name@DaemonThreadCount>
+            active = yes
+            key = java.lang:type=Threading~java.lang.Threading.name@DaemonThreadCount
+            name = java.lang:type=Threading~name@DaemonThreadCount
+            tempMonName = 
+            oldkey = "java.lang"."Threading"."name"."DaemonThreadCount"
+            oper = >
+            thr = 1000
+            unit = int
+            desc = DaemonThreadCount
+            group = General
+            alarm_on = yes
+            msg = MonitorWarning
+            qos_on = yes
+            qos = QOS_JBOSS_THREADCOUNT
+            notfoundalarm = no
+            alarm_always = no
+            profile_name = 10.3.192.108
+            Parent_Level = 2
+            Parent_Root_Node = "java.lang"."Threading"
+         </java.lang:type=Threading~name@DaemonThreadCount>
+         <java.lang:type=Threading~name@PeakThreadCount>
+            active = yes
+            key = java.lang:type=Threading~java.lang.Threading.name@PeakThreadCount
+            name = java.lang:type=Threading~name@PeakThreadCount
+            tempMonName = 
+            oldkey = "java.lang"."Threading"."name"."PeakThreadCount"
+            oper = !=
+            thr = 207
+            unit = int
+            desc = PeakThreadCount
+            group = General
+            alarm_on = no
+            msg = MonitorWarning
+            qos_on = yes
+            qos = QOS_JBOSS_THREADCOUNT
+            notfoundalarm = no
+            alarm_always = no
+            profile_name = 10.3.192.108
+            Parent_Level = 2
+            Parent_Root_Node = "java.lang"."Threading"
+         </java.lang:type=Threading~name@PeakThreadCount>
+         <java.lang:type=Threading~name@ThreadCount>
+            active = yes
+            key = java.lang:type=Threading~java.lang.Threading.name@ThreadCount
+            name = java.lang:type=Threading~name@ThreadCount
+            tempMonName = 
+            oldkey = "java.lang"."Threading"."name"."ThreadCount"
+            oper = !=
+            thr = 192
+            unit = int
+            desc = ThreadCount
+            group = General
+            alarm_on = no
+            msg = MonitorWarning
+            qos_on = yes
+            qos = QOS_JBOSS_THREADCOUNT
+            notfoundalarm = no
+            alarm_always = no
+            profile_name = 10.3.192.108
+            Parent_Level = 2
+            Parent_Root_Node = "java.lang"."Threading"
+         </java.lang:type=Threading~name@ThreadCount>
+      </auto_monitors>
+      <profiles>
+         <vm-jb6-prd-a1.trt>
+            active = yes
+            name = vm-jb6-prd-a1.trt
+            msg = ProfileCritical
+            <properties>
+               host = vm-jb6-prd-a1.trt
+               port = 4547
+            </properties>
+         </vm-jb6-prd-a1.trt>
+      </profiles>
+   </prod1>
+   <prod4>
+      active = yes
+      name = prod4
+      alarm_on_resource = 1
+      msg = ResourceCritical
+      handlerclass = com.nimsoft.nimbus.probe.application.jboss.JmxHandler
+      helperclass = com.nimsoft.nimbus.probe.application.jboss.AttributeHandler
+      interval = 5min
+      <properties>
+         nconn = 1
+         user = jboss
+         pass = MPYv0uRvBGZ8cxPz55tryA==
+         simulate_cluster = 
+         host = vm-jb6-prd-a1.trt
+         port = 4847
+         all = vm-jb6-prd-a1.trt:4847
+      </properties>
+      <auto_monitors>
+         <java.lang:name=PS MarkSweep,type=GarbageCollector~PS MarkSweep@CollectionCount>
+            active = yes
+            key = java.lang:name=PS MarkSweep,type=GarbageCollector~java.lang.GarbageCollector.PS MarkSweep@CollectionCount
+            name = java.lang:name=PS MarkSweep,type=GarbageCollector~PS MarkSweep@CollectionCount
+            tempMonName = 
+            oldkey = "java.lang"."GarbageCollector"."PS MarkSweep"."CollectionCount"
+            oper = !=
+            thr = 2297
+            unit = long
+            desc = CollectionCount
+            group = General
+            alarm_on = no
+            msg = MonitorWarning
+            qos_on = yes
+            qos = QOS_JBOSS_MEMORY_USAGE
+            notfoundalarm = no
+            alarm_always = no
+            profile_name = 10.3.192.108
+            Parent_Level = 2
+            Parent_Root_Node = "java.lang"."GarbageCollector"
+         </java.lang:name=PS MarkSweep,type=GarbageCollector~PS MarkSweep@CollectionCount>
+         <java.lang:name=PS Old Gen,type=MemoryPool~Usage@committed>
+            active = yes
+            key = java.lang:name=PS Old Gen,type=MemoryPool~java.lang.MemoryPool.PS Old Gen.Usage@committed
+            name = java.lang:name=PS Old Gen,type=MemoryPool~Usage@committed
+            tempMonName = 
+            oldkey = "java.lang"."MemoryPool"."PS Old Gen"."Usage"."committed"
+            oper = !=
+            unit = java.lang.Long
+            group = General
+            alarm_on = no
+            msg = MonitorWarning
+            qos_on = yes
+            qos = QOS_JBOSS_MEMORY_USAGE
+            notfoundalarm = no
+            alarm_always = no
+            profile_name = 10.3.192.108
+            Parent_Level = 3
+            Parent_Root_Node = "java.lang"."MemoryPool"
+         </java.lang:name=PS Old Gen,type=MemoryPool~Usage@committed>
+         <java.lang:name=PS Old Gen,type=MemoryPool~Usage@max>
+            active = yes
+            key = java.lang:name=PS Old Gen,type=MemoryPool~java.lang.MemoryPool.PS Old Gen.Usage@max
+            name = java.lang:name=PS Old Gen,type=MemoryPool~Usage@max
+            tempMonName = 
+            oldkey = "java.lang"."MemoryPool"."PS Old Gen"."Usage"."max"
+            oper = !=
+            unit = java.lang.Long
+            group = General
+            alarm_on = no
+            msg = MonitorWarning
+            qos_on = yes
+            qos = QOS_JBOSS_MEMORY_USAGE
+            notfoundalarm = no
+            alarm_always = no
+            profile_name = 10.3.192.108
+            Parent_Level = 3
+            Parent_Root_Node = "java.lang"."MemoryPool"
+         </java.lang:name=PS Old Gen,type=MemoryPool~Usage@max>
+         <java.lang:name=PS Old Gen,type=MemoryPool~Usage@used>
+            active = yes
+            key = java.lang:name=PS Old Gen,type=MemoryPool~java.lang.MemoryPool.PS Old Gen.Usage@used
+            name = java.lang:name=PS Old Gen,type=MemoryPool~Usage@used
+            tempMonName = 
+            oldkey = "java.lang"."MemoryPool"."PS Old Gen"."Usage"."used"
+            oper = !=
+            thr = 855089920
+            unit = java.lang.Long
+            group = General
+            alarm_on = no
+            msg = MonitorWarning
+            qos_on = yes
+            qos = QOS_JBOSS_MEMORY_USAGE
+            notfoundalarm = no
+            alarm_always = no
+            profile_name = 10.3.192.108
+            Parent_Level = 3
+            Parent_Root_Node = "java.lang"."MemoryPool"
+         </java.lang:name=PS Old Gen,type=MemoryPool~Usage@used>
+         <java.lang:type=Threading~name@DaemonThreadCount>
+            active = yes
+            key = java.lang:type=Threading~java.lang.Threading.name@DaemonThreadCount
+            name = java.lang:type=Threading~name@DaemonThreadCount
+            tempMonName = 
+            oldkey = "java.lang"."Threading"."name"."DaemonThreadCount"
+            oper = >
+            thr = 1000
+            unit = int
+            desc = DaemonThreadCount
+            group = General
+            alarm_on = yes
+            msg = MonitorWarning
+            qos_on = yes
+            qos = QOS_JBOSS_THREADCOUNT
+            notfoundalarm = no
+            alarm_always = no
+            profile_name = 10.3.192.108
+            Parent_Level = 2
+            Parent_Root_Node = "java.lang"."Threading"
+         </java.lang:type=Threading~name@DaemonThreadCount>
+         <java.lang:type=Threading~name@PeakThreadCount>
+            active = yes
+            key = java.lang:type=Threading~java.lang.Threading.name@PeakThreadCount
+            name = java.lang:type=Threading~name@PeakThreadCount
+            tempMonName = 
+            oldkey = "java.lang"."Threading"."name"."PeakThreadCount"
+            oper = !=
+            thr = 207
+            unit = int
+            desc = PeakThreadCount
+            group = General
+            alarm_on = no
+            msg = MonitorWarning
+            qos_on = yes
+            qos = QOS_JBOSS_THREADCOUNT
+            notfoundalarm = no
+            alarm_always = no
+            profile_name = 10.3.192.108
+            Parent_Level = 2
+            Parent_Root_Node = "java.lang"."Threading"
+         </java.lang:type=Threading~name@PeakThreadCount>
+         <java.lang:type=Threading~name@ThreadCount>
+            active = yes
+            key = java.lang:type=Threading~java.lang.Threading.name@ThreadCount
+            name = java.lang:type=Threading~name@ThreadCount
+            tempMonName = 
+            oldkey = "java.lang"."Threading"."name"."ThreadCount"
+            oper = !=
+            thr = 192
+            unit = int
+            desc = ThreadCount
+            group = General
+            alarm_on = no
+            msg = MonitorWarning
+            qos_on = yes
+            qos = QOS_JBOSS_THREADCOUNT
+            notfoundalarm = no
+            alarm_always = no
+            profile_name = 10.3.192.108
+            Parent_Level = 2
+            Parent_Root_Node = "java.lang"."Threading"
+         </java.lang:type=Threading~name@ThreadCount>
+      </auto_monitors>
+      <profiles>
+         <vm-jb6-prd-a1.trt(1)>
+            active = yes
+            name = vm-jb6-prd-a1.trt(1)
+            msg = ProfileCritical
+            <properties>
+               host = vm-jb6-prd-a1.trt
+               port = 4847
+            </properties>
+         </vm-jb6-prd-a1.trt(1)>
+      </profiles>
+   </prod4>
+   <prod6>
+      active = yes
+      name = prod6
+      alarm_on_resource = 1
+      msg = ResourceCritical
+      handlerclass = com.nimsoft.nimbus.probe.application.jboss.JmxHandler
+      helperclass = com.nimsoft.nimbus.probe.application.jboss.AttributeHandler
+      interval = 5min
+      <properties>
+         nconn = 1
+         user = jboss
+         pass = MPYv0uRvBGZ8cxPz55tryA==
+         simulate_cluster = 
+         host = vm-jb6-prd-a1.trt
+         port = 5047
+         all = vm-jb6-prd-a1.trt:5047
+      </properties>
+      <auto_monitors>
+         <java.lang:name=PS MarkSweep,type=GarbageCollector~PS MarkSweep@CollectionCount>
+            active = yes
+            key = java.lang:name=PS MarkSweep,type=GarbageCollector~java.lang.GarbageCollector.PS MarkSweep@CollectionCount
+            name = java.lang:name=PS MarkSweep,type=GarbageCollector~PS MarkSweep@CollectionCount
+            tempMonName = 
+            oldkey = "java.lang"."GarbageCollector"."PS MarkSweep"."CollectionCount"
+            oper = !=
+            thr = 2297
+            unit = long
+            desc = CollectionCount
+            group = General
+            alarm_on = no
+            msg = MonitorWarning
+            qos_on = yes
+            qos = QOS_JBOSS_MEMORY_USAGE
+            notfoundalarm = no
+            alarm_always = no
+            profile_name = 10.3.192.108
+            Parent_Level = 2
+            Parent_Root_Node = "java.lang"."GarbageCollector"
+         </java.lang:name=PS MarkSweep,type=GarbageCollector~PS MarkSweep@CollectionCount>
+         <java.lang:name=PS Old Gen,type=MemoryPool~Usage@committed>
+            active = yes
+            key = java.lang:name=PS Old Gen,type=MemoryPool~java.lang.MemoryPool.PS Old Gen.Usage@committed
+            name = java.lang:name=PS Old Gen,type=MemoryPool~Usage@committed
+            tempMonName = 
+            oldkey = "java.lang"."MemoryPool"."PS Old Gen"."Usage"."committed"
+            oper = !=
+            unit = java.lang.Long
+            group = General
+            alarm_on = no
+            msg = MonitorWarning
+            qos_on = yes
+            qos = QOS_JBOSS_MEMORY_USAGE
+            notfoundalarm = no
+            alarm_always = no
+            profile_name = 10.3.192.108
+            Parent_Level = 3
+            Parent_Root_Node = "java.lang"."MemoryPool"
+         </java.lang:name=PS Old Gen,type=MemoryPool~Usage@committed>
+         <java.lang:name=PS Old Gen,type=MemoryPool~Usage@max>
+            active = yes
+            key = java.lang:name=PS Old Gen,type=MemoryPool~java.lang.MemoryPool.PS Old Gen.Usage@max
+            name = java.lang:name=PS Old Gen,type=MemoryPool~Usage@max
+            tempMonName = 
+            oldkey = "java.lang"."MemoryPool"."PS Old Gen"."Usage"."max"
+            oper = !=
+            unit = java.lang.Long
+            group = General
+            alarm_on = no
+            msg = MonitorWarning
+            qos_on = yes
+            qos = QOS_JBOSS_MEMORY_USAGE
+            notfoundalarm = no
+            alarm_always = no
+            profile_name = 10.3.192.108
+            Parent_Level = 3
+            Parent_Root_Node = "java.lang"."MemoryPool"
+         </java.lang:name=PS Old Gen,type=MemoryPool~Usage@max>
+         <java.lang:name=PS Old Gen,type=MemoryPool~Usage@used>
+            active = yes
+            key = java.lang:name=PS Old Gen,type=MemoryPool~java.lang.MemoryPool.PS Old Gen.Usage@used
+            name = java.lang:name=PS Old Gen,type=MemoryPool~Usage@used
+            tempMonName = 
+            oldkey = "java.lang"."MemoryPool"."PS Old Gen"."Usage"."used"
+            oper = !=
+            thr = 855089920
+            unit = java.lang.Long
+            group = General
+            alarm_on = no
+            msg = MonitorWarning
+            qos_on = yes
+            qos = QOS_JBOSS_MEMORY_USAGE
+            notfoundalarm = no
+            alarm_always = no
+            profile_name = 10.3.192.108
+            Parent_Level = 3
+            Parent_Root_Node = "java.lang"."MemoryPool"
+         </java.lang:name=PS Old Gen,type=MemoryPool~Usage@used>
+         <java.lang:type=Threading~name@DaemonThreadCount>
+            active = yes
+            key = java.lang:type=Threading~java.lang.Threading.name@DaemonThreadCount
+            name = java.lang:type=Threading~name@DaemonThreadCount
+            tempMonName = 
+            oldkey = "java.lang"."Threading"."name"."DaemonThreadCount"
+            oper = >
+            thr = 1000
+            unit = int
+            desc = DaemonThreadCount
+            group = General
+            alarm_on = yes
+            msg = MonitorWarning
+            qos_on = yes
+            qos = QOS_JBOSS_THREADCOUNT
+            notfoundalarm = no
+            alarm_always = no
+            profile_name = 10.3.192.108
+            Parent_Level = 2
+            Parent_Root_Node = "java.lang"."Threading"
+         </java.lang:type=Threading~name@DaemonThreadCount>
+         <java.lang:type=Threading~name@PeakThreadCount>
+            active = yes
+            key = java.lang:type=Threading~java.lang.Threading.name@PeakThreadCount
+            name = java.lang:type=Threading~name@PeakThreadCount
+            tempMonName = 
+            oldkey = "java.lang"."Threading"."name"."PeakThreadCount"
+            oper = !=
+            thr = 207
+            unit = int
+            desc = PeakThreadCount
+            group = General
+            alarm_on = no
+            msg = MonitorWarning
+            qos_on = yes
+            qos = QOS_JBOSS_THREADCOUNT
+            notfoundalarm = no
+            alarm_always = no
+            profile_name = 10.3.192.108
+            Parent_Level = 2
+            Parent_Root_Node = "java.lang"."Threading"
+         </java.lang:type=Threading~name@PeakThreadCount>
+         <java.lang:type=Threading~name@ThreadCount>
+            active = yes
+            key = java.lang:type=Threading~java.lang.Threading.name@ThreadCount
+            name = java.lang:type=Threading~name@ThreadCount
+            tempMonName = 
+            oldkey = "java.lang"."Threading"."name"."ThreadCount"
+            oper = !=
+            thr = 192
+            unit = int
+            desc = ThreadCount
+            group = General
+            alarm_on = no
+            msg = MonitorWarning
+            qos_on = yes
+            qos = QOS_JBOSS_THREADCOUNT
+            notfoundalarm = no
+            alarm_always = no
+            profile_name = 10.3.192.108
+            Parent_Level = 2
+            Parent_Root_Node = "java.lang"."Threading"
+         </java.lang:type=Threading~name@ThreadCount>
+      </auto_monitors>
+      <profiles>
+         <vm-jb6-prd-a1.trt(2)>
+            active = yes
+            name = vm-jb6-prd-a1.trt(2)
+            msg = ProfileCritical
+            <properties>
+               host = vm-jb6-prd-a1.trt
+               port = 5047
+            </properties>
+         </vm-jb6-prd-a1.trt(2)>
+      </profiles>
+   </prod6>
+</resources>

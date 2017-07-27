@@ -1,0 +1,24 @@
+<controller>
+   domain = TRT3
+   hub = vm-win-uim-05
+   hubip = 10.3.190.82
+   robotname = 
+   robotip = 10.3.192.107
+   ip_version = ipv4 ipv6
+   robotip_alias = 
+   first_probe_port = 
+   autoremove = 
+   robot_mode = normal
+   hubrobotname = vm-win-uim-05
+   hubport = 48002
+   access_0 = 0
+   access_1 = 1
+   access_2 = 2
+   access_3 = 3
+   access_4 = 4
+   <environment>
+      LD_LIBRARY_PATH = .:$LD_LIBRARY_PATH
+      NIM_JRE_HOME = jre/jre7
+      NIM_JRE_HOME_1_7 = jre/jre7
+   </environment>
+</controller>
